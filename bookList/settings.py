@@ -32,6 +32,9 @@ INSTALLED_APPS = [
     # my apps
     'main',
 
+    # imported apps
+    'bootstrap5',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
