@@ -1,3 +1,8 @@
+{% load bootstrap5 %}
+{% load static %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +10,21 @@
     <title>Title</title>
 </head>
 <body>
-    dash
+<div class="container">
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+
+            <a class="navbar-brand" href="#">
+                {% if userImg %}
+                    <img src="{{userImg.url}}">
+                {% else %}
+
+                {% endif %}
+            </a>
+
+            {{username}}
+        </div>
+    </nav>
+</div>
 </body>
 </html>
