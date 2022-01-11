@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from main.models import Account
 
@@ -16,7 +16,8 @@ def dashView(request):
     if request.user.is_authenticated:
         context = {
             "username": request.user.username,
-            "userImg": request.user.user_img
+            "userImg": request.user.user_img,
+            "userInitial": request.user.username[0:2].upper()
         }
 
         return render(request, 'dash.html', context=context)
@@ -28,7 +29,9 @@ def dashView(request):
 def processLogin(request):
     email, username, password = request.POST.get('email'), request.POST.get('username'), request.POST.get('password')
     user = authenticate(email=email, username=username, password=password)
+
     if user is not None:
+        login(request, user)
         return redirect('dashView')
     else:
         return redirect('loginView')
@@ -39,3 +42,8 @@ def processSignup(request):
     user = Account.objects.create_user(email=email, username=username, password=password)
     login(request, user)
     return redirect('dashView')
+
+
+def processLogout(request):
+    logout(request)
+    return redirect('loginView')

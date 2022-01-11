@@ -8,6 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/dash.css'%}">
 </head>
 <body>
 <div class="container">
@@ -16,13 +17,17 @@
 
             <a class="navbar-brand" href="#">
                 {% if userImg %}
-                    <img src="{{userImg.url}}">
+                    <img class="rounded-circle" src={{userImg.url}} width=50 height=50 >
                 {% else %}
-
+                    <div class="userIcon border border-secondary rounded-circle" width=50 height=50>{{userInitial}}</div>
                 {% endif %}
             </a>
 
             {{username}}
+            <form action="{% url 'processLogout' %}">
+                <button type="submit" class="btn btn-outline-danger">Logout</button>
+            </form>
+
         </div>
     </nav>
 </div>
