@@ -38,7 +38,12 @@ def dashView(request):
 def searchResultView(request):
     bookName = request.GET.get('bookName')
     if request.method == 'GET' and bookName:
-        context = getResFromGoogle(bookName)
+        context = {
+            **getResFromGoogle(bookName),
+            "username": request.user.username,
+            "userImg": request.user.user_img,
+            "userInitial": request.user.username[0:2].upper(),
+        }
         return render(request, "searchResult.html", context=context)
 
 
@@ -72,3 +77,7 @@ def getResFromGoogle(bookName):
         f = {'q': bookName, 'key': api_key}
         google_host += "?" + urllib.parse.urlencode(f)
         return requests.get(google_host).json()
+
+
+# Helper
+
