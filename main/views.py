@@ -36,7 +36,10 @@ def dashView(request):
 
 
 def searchResultView(request):
-    return render(request, "searchResult.html", {'bookQueries': request.session['lastSearch']})
+    bookName = request.GET.get('bookName')
+    if request.method == 'GET' and bookName:
+        context = getResFromGoogle(bookName)
+        return render(request, "searchResult.html", context=context)
 
 
 # PROCESS
@@ -63,13 +66,9 @@ def processLogout(request):
     return redirect('loginView')
 
 
-def processBookSearch(request):
-    if request.method == 'GET':
-        bookNameToBeSearched = request.GET.get('bookName')
+def getResFromGoogle(bookName):
         api_key = "AIzaSyDzp_LKa5V2u5vtPu1cMtTKM287r7KW50s"
         google_host = "https://www.googleapis.com/books/v1/volumes"
-        f = {'q': bookNameToBeSearched, 'key': api_key}
+        f = {'q': bookName, 'key': api_key}
         google_host += "?" + urllib.parse.urlencode(f)
-        res = requests.get(google_host).json()
-        request.session['lastSearch'] = res
-        return redirect('searchResultView')
+        return requests.get(google_host).json()

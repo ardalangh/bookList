@@ -1,77 +1,38 @@
-{% load bootstrap5 %}
-{% load static %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
+{% extends 'base.html' %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
 
-    <div class="container">
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-            <div class="leftNav">
-                <a class="navbar-brand" href="#">
-                    {% if userImg %}
-                    <img class="rounded-circle" src={{userImg.url}} width=50 height=50>
+{% block content %}
+
+    {% for book in items %}
+
+        <div class="card text-dark bg-light">
+            <div style="display: block">
+                <div style="width: 128px; margin: auto;">
+                    {% if book.volumeInfo.imageLinks.thumbnail %}
+                        <img src={{book.volumeInfo.imageLinks.thumbnail}} class="card-img-top bookImg" alt="...">
+                    {% elif book.volumeInfo.imageLinks.smallThumbnail %}
+                        <img src={{book.volumeInfo.imageLinks.smallThumbnail}} class="card-img-top bookImg" alt="...">
                     {% else %}
-                    <div class="userIcon border border-secondary rounded-circle" width=50 height=50>{{userInitial}}
-                    </div>
+                        <img src="#" class="card-img-top bookImg" alt="...">
                     {% endif %}
-                </a>
-
-                {{username}}
-            </div>
-            <div class="rightNav">
-                <form method="GET" action="{% url 'processBookSearch'}">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">@</span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Book name" aria-label="Book name"
-                               aria-describedby="basic-addon1">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </div>
-                </form>
-
-
-                <form action="{% url 'processLogout' %}">
-                    <button type="submit" class="btn btn-outline-danger">Logout</button>
-                </form>
+                </div>
             </div>
 
+            <div class="card-body">
+                <div>
+                    <h5 class="card-title">{{book.volumeInfo.title}}</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+                        content.</p>
+                </div>
 
+                <div>
+                    <a href="#" class="btn btn-secondary">Add To Your List</a>
+                    <a href="#" class="btn btn-info">Book Info</a>
+                </div>
+
+            </div>
         </div>
-    </nav>
+    {% endfor %}
 
 
-
-
-
-
-
-<!--        {% for book in bookQueries.items %}-->
-
-<!--          <div class="bookCard">-->
-<!--            <img src="{{ book.volumeInfo.imageLinks.thumbnail}}" alt="" srcset="" >-->
-<!--                  <a href="/book/{{book.id}}" style="text-decoration: none; color: violet;"><h5 class="card-title">{{book.volumeInfo.title}}</h5></a>-->
-<!--                  <button id='addtolist'>add to reading list</button>-->
-<!--          </div>-->
-<!--        {% endfor %}-->
-
-
-
-
-
-
-
-
-
-</div>
-
-</body>
-</html>
+{% endblock %}
