@@ -1,3 +1,6 @@
+import urllib
+
+import requests
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from main.models import Account
@@ -17,12 +20,23 @@ def dashView(request):
         context = {
             "username": request.user.username,
             "userImg": request.user.user_img,
-            "userInitial": request.user.username[0:2].upper()
+            "userInitial": request.user.username[0:2].upper(),
+            "books": [
+                {
+                    "id": book.id,
+                    "name": book.name,
+                    "bookImgUrl": book.imgUrl
+                } for book in request.user.books.all()
+            ]
         }
 
         return render(request, 'dash.html', context=context)
     else:
         return redirect('loginView')
+
+
+def searchResultView(request):
+    return render(request, "searchResult.html", {'bookQueries': request.session['lastSearch']})
 
 
 # PROCESS
@@ -47,3 +61,15 @@ def processSignup(request):
 def processLogout(request):
     logout(request)
     return redirect('loginView')
+
+
+def processBookSearch(request):
+    if request.method == 'GET':
+        bookNameToBeSearched = request.GET.get('bookName')
+        api_key = "AIzaSyDzp_LKa5V2u5vtPu1cMtTKM287r7KW50s"
+        google_host = "https://www.googleapis.com/books/v1/volumes"
+        f = {'q': bookNameToBeSearched, 'key': api_key}
+        google_host += "?" + urllib.parse.urlencode(f)
+        res = requests.get(google_host).json()
+        request.session['lastSearch'] = res
+        return redirect('searchResultView')

@@ -1,35 +1,30 @@
-{% load bootstrap5 %}
-{% load static %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
+{% extends 'base.html' %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="{% static 'css/dash.css'%}">
-</head>
-<body>
-<div class="container">
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
 
-            <a class="navbar-brand" href="#">
-                {% if userImg %}
-                    <img class="rounded-circle" src={{userImg.url}} width=50 height=50 >
-                {% else %}
-                    <div class="userIcon border border-secondary rounded-circle" width=50 height=50>{{userInitial}}</div>
-                {% endif %}
-            </a>
+{% block content %}
+    {% for book in books %}
+        <div class="card">
+            <div style="display: block">
+                <div style="width: 128px; margin: auto;">
+                    <img src={{book.bookImgUrl}} class="card-img-top bookImg" alt="...">
+                </div>
+            </div>
 
-            {{username}}
-            <form action="{% url 'processLogout' %}">
-                <button type="submit" class="btn btn-outline-danger">Logout</button>
-            </form>
+            <div class="card-body">
+                <div>
+                    <h5 class="card-title">{{book.name}}</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+                        content.</p>
+                </div>
 
+                <div>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <button type="button" class="btn btn-danger">Delete</button>
+                </div>
+
+            </div>
         </div>
-    </nav>
-</div>
-</body>
-</html>
+    {% endfor %}
+
+
+{% endblock %}

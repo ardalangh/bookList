@@ -1,0 +1,77 @@
+{% load bootstrap5 %}
+{% load static %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <div class="container">
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="leftNav">
+                <a class="navbar-brand" href="#">
+                    {% if userImg %}
+                    <img class="rounded-circle" src={{userImg.url}} width=50 height=50>
+                    {% else %}
+                    <div class="userIcon border border-secondary rounded-circle" width=50 height=50>{{userInitial}}
+                    </div>
+                    {% endif %}
+                </a>
+
+                {{username}}
+            </div>
+            <div class="rightNav">
+                <form method="GET" action="{% url 'processBookSearch'}">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">@</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Book name" aria-label="Book name"
+                               aria-describedby="basic-addon1">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </div>
+                </form>
+
+
+                <form action="{% url 'processLogout' %}">
+                    <button type="submit" class="btn btn-outline-danger">Logout</button>
+                </form>
+            </div>
+
+
+        </div>
+    </nav>
+
+
+
+
+
+
+
+<!--        {% for book in bookQueries.items %}-->
+
+<!--          <div class="bookCard">-->
+<!--            <img src="{{ book.volumeInfo.imageLinks.thumbnail}}" alt="" srcset="" >-->
+<!--                  <a href="/book/{{book.id}}" style="text-decoration: none; color: violet;"><h5 class="card-title">{{book.volumeInfo.title}}</h5></a>-->
+<!--                  <button id='addtolist'>add to reading list</button>-->
+<!--          </div>-->
+<!--        {% endfor %}-->
+
+
+
+
+
+
+
+
+
+</div>
+
+</body>
+</html>

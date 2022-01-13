@@ -1,0 +1,41 @@
+
+.userIcon {
+    padding: 5px
+}
+
+
+.rightNav{
+    display: flex;
+    align-items: center
+}
+
+from{
+    display: inline-block;
+}
+
+.container{
+    text-align: center
+}
+
+
+.card{
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 450px;
+  width: 300px;
+}
+
+
+.card-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+.bookImg {
+  margin: auto;
+  width: 128px;
+  height: 198px;
+}
