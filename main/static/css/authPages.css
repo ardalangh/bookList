@@ -1,11 +1,10 @@
 
-html {
-  background-color: #56baed;
-}
 
 body {
   font-family: "Poppins", sans-serif;
   height: 100vh;
+  background-color: #18191A;
+
 }
 
 a {
@@ -54,7 +53,7 @@ h2 {
 }
 
 #formFooter {
-  background-color: #f6f6f6;
+  background-color: #212121;
   border-top: 1px solid #dce8f1;
   padding: 25px;
   text-align: center;
@@ -113,8 +112,8 @@ input[type=button]:active, input[type=submit]:active, input[type=reset]:active  
   transform: scale(0.95);
 }
 
-input[type=text] {
-  background-color: #f6f6f6;
+input[type=text], input[type=password], input[type=email]  {
+  background-color: #242526;
   border: none;
   color: #0d0d0d;
   padding: 15px 32px;
@@ -124,7 +123,6 @@ input[type=text] {
   font-size: 16px;
   margin: 5px;
   width: 85%;
-  border: 2px solid #f6f6f6;
   -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;
   -ms-transition: all 0.5s ease-in-out;
@@ -134,12 +132,22 @@ input[type=text] {
   border-radius: 5px 5px 5px 5px;
 }
 
-input[type=text]:focus {
-  background-color: #fff;
-  border-bottom: 2px solid #5fbae9;
+
+
+
+input[type=text]:autofill {
+    background-color: green;
 }
 
-input[type=text]:placeholder {
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active  {
+  -webkit-box-shadow: 0 0 0px 1000px #242526 inset;
+
+}
+
+input[type=text]:placeholder, input[type=password].placeholder, input[type=email].placeholder  {
   color: #cccccc;
 }
 
@@ -240,7 +248,7 @@ input[type=text]:placeholder {
 }
 
 .underlineHover:hover {
-  color: #0d0d0d;
+  color: #92badd;
 }
 
 .underlineHover:hover:after{
@@ -251,6 +259,12 @@ input[type=text]:placeholder {
 
 /* OTHERS */
 
+h1{
+    color: white;
+}
+
+
+
 *:focus {
     outline: none;
 }
@@ -258,3 +272,12 @@ input[type=text]:placeholder {
 #icon {
   width:60%;
 }
+
+
+
+
+#formContent {
+    background-color:#3A3B3C;
+}
+
+

@@ -1,4 +1,5 @@
 
+
 .userIcon {
     padding: 5px
 }
@@ -14,18 +15,23 @@ from{
 }
 
 .container{
-    text-align: center
+    text-align: center;
 }
 
 
 .card{
+  padding-top: 1%;
+  background-color: #383838;
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
   height: 450px;
   width: 300px;
   margin-bottom: 1%;
+  color: white;
 }
+
+
 
 
 .card-body{
@@ -40,3 +46,13 @@ from{
   width: 128px;
   height: 198px;
 }
+
+
+header {
+    background-color: #1F1F1F;
+    margin-bottom: 1%;
+}
+
+
+
+

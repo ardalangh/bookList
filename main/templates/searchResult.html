@@ -4,8 +4,8 @@
 {% block content %}
 
     {% for book in items %}
+        <div class="card">
 
-        <div class="card text-dark bg-light">
             <div style="display: block">
                 <div style="width: 128px; margin: auto;">
                     {% if book.volumeInfo.imageLinks.thumbnail %}
@@ -27,7 +27,7 @@
 
                 <div>
                     <a href="#" class="btn btn-secondary">Add To Your List</a>
-                    <a href="#" class="btn btn-info">Book Info</a>
+                    <a href="{% url 'bookInfoView' book.id %}" class="btn btn-info">Book Info</a>
                 </div>
 
             </div>

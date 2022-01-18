@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    <div style="
+          background-color: #383838;
+          display: inline-flex;
+          flex-direction: column;
+          height: 100vh;
+          margin-bottom: 1%;
+          color: white;
+        ">
+        <div>
+                    <img
+                src={{volumeInfo.imageLinks.thumbnail}}
+                width="30%"
+                alt="...">
+
+        </div>
+
+        <h5>{{volumeInfo.title}}</h5>
+
+
+
+
+        {% with total=volumeInfo.authors%}
+        author{{ total|pluralize }}
+        {% endwith %}
+
+            {% for author in volumeInfo.authors %}
+            <span>{{author}}</span>
+        {% endfor%}
+        <p>{{volumeInfo.description}}</p>
+
+    </div>
+
+
+{% endblock %}
