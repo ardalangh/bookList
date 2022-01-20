@@ -1,5 +1,4 @@
 import urllib
-
 import requests
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -39,9 +38,12 @@ def dashView(request):
 
 def searchResultView(request):
     bookName = request.GET.get('bookName')
+    requestResponse = getResFromGoogle(bookName)
+    request.session["lastSearchData"] = requestResponse
+
     if request.method == 'GET' and bookName:
         context = {
-            **getResFromGoogle(bookName),
+            **requestResponse,
             "username": request.user.username,
             "userImg": request.user.user_img,
             "userInitial": request.user.username[0:2].upper(),
@@ -50,10 +52,10 @@ def searchResultView(request):
 
 
 def bookInfoView(request, id):
-    bookData = getResFromGoogle(id)
-    if len(bookData.get('items')) > 0:
+    targetBook = list(filter(lambda b: b["id"] == id, request.session["lastSearchData"]["items"]))
+    if len(targetBook) > 0:
         context = {
-            **bookData.get('items')[0],
+            **targetBook[0],
             "username": request.user.username,
             "userImg": request.user.user_img,
             "userInitial": request.user.username[0:2].upper(),
@@ -93,7 +95,6 @@ def processLogout(request):
 
 
 # HELPER
-
 def getResFromGoogle(bookName):
     api_key = "AIzaSyDzp_LKa5V2u5vtPu1cMtTKM287r7KW50s"
     google_host = "https://www.googleapis.com/books/v1/volumes"
@@ -101,11 +102,9 @@ def getResFromGoogle(bookName):
     google_host += "?" + urllib.parse.urlencode(f)
     return requests.get(google_host).json()
 
-
-def getResFromGoogleById(id):
-    api_key = "AIzaSyDzp_LKa5V2u5vtPu1cMtTKM287r7KW50s"
-    google_host = "https://books.google.com/ebooks"
-    f = {'id': id, 'key': api_key}
-    google_host += "?" + urllib.parse.urlencode(f)
-    print(google_host)
-    return requests.get(google_host).json()
+# def getResFromGoogleById(id):
+#     api_key = "AIzaSyDzp_LKa5V2u5vtPu1cMtTKM287r7KW50s"
+#     google_host = "https://books.google.com/bbooks/v1/volumes"
+#     f = {'id': id, 'key': api_key}
+#     google_host += "?" + urllib.parse.urlencode(f)
+#     return requests.get(google_host).json()

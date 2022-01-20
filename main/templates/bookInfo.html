@@ -3,37 +3,49 @@
 
 {% block content %}
 
-    <div style="
-          background-color: #383838;
-          display: inline-flex;
-          flex-direction: column;
-          height: 100vh;
-          margin-bottom: 1%;
-          color: white;
-        ">
-        <div>
-                    <img
+
+
+
+<div class="bookInfoCard">
+    <div class="bookImageContainer">
+        <img
                 src={{volumeInfo.imageLinks.thumbnail}}
-                width="30%"
-                alt="...">
+                alt={{volumeInfo.title}} image
+        >
+    </div>
 
-        </div>
-
-        <h5>{{volumeInfo.title}}</h5>
-
-
+    <!--Book Title-->
+    <h5>{{volumeInfo.title}}</h5>
 
 
+    <div class="AuthorInfo">
+        <!--pluralize "author id needed"-->
         {% with total=volumeInfo.authors%}
-        author{{ total|pluralize }}
+            Author{{ total|pluralize }}:
         {% endwith %}
 
-            {% for author in volumeInfo.authors %}
-            <span>{{author}}</span>
+        {% for author in volumeInfo.authors %}
+            {{author}}&nbsp;&nbsp;
         {% endfor%}
-        <p>{{volumeInfo.description}}</p>
-
     </div>
+
+    <div>
+        Published by {{volumeInfo.publisher}} on {{volumeInfo.publishedDate}}
+    </div>
+
+
+
+    <!--isbn information-->
+    <div class="ISBNInfo">
+        {% for isbn in volumeInfo.industryIdentifiers %}
+            {{isbn.type}} : {{isbn.identifier}} &nbsp;&nbsp;
+        {% endfor%}
+    </div>
+
+    <hr/>
+    <p>{{volumeInfo.description}}</p>
+
+</div>
 
 
 {% endblock %}

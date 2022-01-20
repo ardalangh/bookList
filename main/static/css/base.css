@@ -56,3 +56,28 @@ header {
 
 
 
+.bookInfoCard{
+    background-color: #383838;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1% 1%;
+    color: white;
+}
+
+
+.bookInfoCard .authorName {
+    display: inline-block;
+}
+
+
+
+
+.bookInfoCard .bookImageContainer {
+    margin-bottom: 1%;
+}
+
+
+
+
+
