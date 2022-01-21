@@ -5,14 +5,11 @@
 }
 
 
-.rightNav{
-    display: flex;
-    align-items: center
+.leftNav{
+    margin-right: 10px;
 }
 
-from{
-    display: inline-block;
-}
+
 
 .container{
     text-align: center;
@@ -80,4 +77,9 @@ header {
 
 
 
+
+.btn-outline, .btn-outline:hover {
+    border: 1px solid white;
+    color: white;
+}
 

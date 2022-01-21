@@ -101,10 +101,3 @@ def getResFromGoogle(bookName):
     f = {'q': bookName, 'key': api_key}
     google_host += "?" + urllib.parse.urlencode(f)
     return requests.get(google_host).json()
-
-# def getResFromGoogleById(id):
-#     api_key = "AIzaSyDzp_LKa5V2u5vtPu1cMtTKM287r7KW50s"
-#     google_host = "https://books.google.com/bbooks/v1/volumes"
-#     f = {'id': id, 'key': api_key}
-#     google_host += "?" + urllib.parse.urlencode(f)
-#     return requests.get(google_host).json()
