@@ -51,7 +51,7 @@ def searchResultView(request):
         }
     else:
         context = {
-            ** request.session["lastSearchData"],
+            **request.session["lastSearchData"],
             "username": request.user.username,
             "userImg": request.user.user_img,
             "userInitial": request.user.username[0:2].upper(),
@@ -113,7 +113,16 @@ def processAddToReadingList(request):
     else:
         messages.error(request, f"Book id {bookId} is already in your list")
         return redirect('searchResultView')
-    
+
+
+def processDeleteFromReadingList(request, id):
+    if id in request.user.books:
+        del request.user.books[id]
+        request.user.save()
+    else:
+        messages.error(request, f"book if {id} is not in your reading list")
+
+    return redirect('dashView')
 
 
 # HELPER
