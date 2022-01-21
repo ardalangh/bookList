@@ -25,7 +25,18 @@
                 </div>
 
                 <div>
-                    <a href="#" class="btn btn-secondary">Add To Your List</a>
+
+                    <form method="post" action="{% url 'processAddToReadingList'%}">
+                        {% csrf_token %}
+                        <input type="hidden" value ={{book.id}} name="bookId" id="bookId" >
+                        <button type="submit" class="btn btn-secondary">Add To Your List</button>
+                    </form>
+
+
+
+
+
+
                     <a href="{% url 'bookInfoView' book.id %}" class="btn btn-info">Book Info</a>
                 </div>
 

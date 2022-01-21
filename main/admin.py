@@ -1,5 +1,5 @@
 from django.contrib import admin
-from main.models import Account, Book
+from main.models import Account
 
 admin.site.register(Account)
-admin.site.register(Book)
+

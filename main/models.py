@@ -41,7 +41,7 @@ class Account(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
 
     user_img = models.ImageField(blank=True, upload_to='uploads')
-    books = models.ManyToManyField('Book')
+    books = models.JSONField(default=dict)
 
 
     USERNAME_FIELD = 'email'
@@ -56,10 +56,4 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
-
-
-class Book(models.Model):
-    id = models.CharField(max_length=30, primary_key=True)
-    name = models.CharField(max_length=50)
-    imgUrl = models.URLField()
 

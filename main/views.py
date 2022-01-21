@@ -1,3 +1,4 @@
+import json
 import urllib
 import requests
 from django.contrib.auth import authenticate, login, logout
@@ -18,16 +19,17 @@ def signupView(request):
 
 def dashView(request):
     if request.user.is_authenticated:
+        books = request.user.books
         context = {
             "username": request.user.username,
             "userImg": request.user.user_img,
             "userInitial": request.user.username[0:2].upper(),
             "books": [
                 {
-                    "id": book.id,
-                    "name": book.name,
-                    "bookImgUrl": book.imgUrl
-                } for book in request.user.books.all()
+                    "id": bookId,
+                    "name": books[bookId]["volumeInfo"]["title"],
+                    "bookImgUrl": books[bookId]["volumeInfo"]["imageLinks"]["thumbnail"]
+                } for bookId in books.keys()
             ]
         }
 
@@ -92,6 +94,19 @@ def processSignup(request):
 def processLogout(request):
     logout(request)
     return redirect('loginView')
+
+
+def processAddToReadingList(request):
+    bookId = request.POST.get('bookId')
+    bookData = list(filter(lambda b: b["id"] == bookId, request.session["lastSearchData"]["items"]))
+
+    if bookId not in request.user.books and len(bookData) > 0:
+        request.user.books[bookId] = bookData[0]
+        request.user.save()
+    else:
+        messages.error(request, f"Book id {bookId} is already in your list")
+
+    return redirect('dashView')
 
 
 # HELPER
