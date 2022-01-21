@@ -33,7 +33,9 @@ INSTALLED_APPS = [
     'main',
 
     # imported apps
+    'bootstrap',
     'bootstrap5',
+    'django_static_jquery',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -126,4 +128,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / 'media'
-
