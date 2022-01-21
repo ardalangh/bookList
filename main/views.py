@@ -41,16 +41,22 @@ def dashView(request):
 def searchResultView(request):
     bookName = request.GET.get('bookName')
     requestResponse = getResFromGoogle(bookName)
-    request.session["lastSearchData"] = requestResponse
-
     if request.method == 'GET' and bookName:
+        request.session["lastSearchData"] = requestResponse
         context = {
             **requestResponse,
             "username": request.user.username,
             "userImg": request.user.user_img,
             "userInitial": request.user.username[0:2].upper(),
         }
-        return render(request, "searchResult.html", context=context)
+    else:
+        context = {
+            ** request.session["lastSearchData"],
+            "username": request.user.username,
+            "userImg": request.user.user_img,
+            "userInitial": request.user.username[0:2].upper(),
+        }
+    return render(request, "searchResult.html", context=context)
 
 
 def bookInfoView(request, id):
@@ -103,10 +109,11 @@ def processAddToReadingList(request):
     if bookId not in request.user.books and len(bookData) > 0:
         request.user.books[bookId] = bookData[0]
         request.user.save()
+        return redirect('dashView')
     else:
         messages.error(request, f"Book id {bookId} is already in your list")
-
-    return redirect('dashView')
+        return redirect('searchResultView')
+    
 
 
 # HELPER
