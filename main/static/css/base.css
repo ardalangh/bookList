@@ -1,7 +1,9 @@
 
 
-.userIcon {
-    padding: 5px
+.userIcon{
+    padding: 5px 10px;
+    font-size: 12px;'
+    font-style: bold;
 }
 
 

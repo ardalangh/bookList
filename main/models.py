@@ -1,3 +1,4 @@
+from django.core.validators import RegexValidator, MinLengthValidator
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
@@ -37,6 +38,7 @@ class Account(AbstractBaseUser):
 
     user_img = models.ImageField(blank=True, upload_to='uploads')
     books = models.JSONField(default=dict)
+    userRandomColor = models.CharField(max_length=7, validators=[MinLengthValidator(7)], default="#ffffff")
 
     USERNAME_FIELD = 'username'
 

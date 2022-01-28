@@ -1,4 +1,5 @@
 import json
+import random
 import urllib
 import requests
 from django.contrib.auth import authenticate, login, logout
@@ -20,10 +21,13 @@ def signupView(request):
 def dashView(request):
     if request.user.is_authenticated:
         books = request.user.books
+
+        print(request.user.userRandomColor)
         context = {
             "username": request.user.username,
             "userImg": request.user.user_img,
-            "userInitial": request.user.username[0:2].upper(),
+            "userInitial": request.user.username[0].upper(),
+            "userRandomColor": request.user.userRandomColor,
             "books": [
                 {
                     "id": bookId,
@@ -48,7 +52,7 @@ def searchResultView(request):
             **requestResponse,
             "username": request.user.username,
             "userImg": request.user.user_img,
-            "userInitial": request.user.username[0:2].upper(),
+            "userInitial": request.user.username[0].upper(),
         }
     else:
         context = {
@@ -67,7 +71,7 @@ def bookInfoView(request, id):
             **targetBook[0],
             "username": request.user.username,
             "userImg": request.user.user_img,
-            "userInitial": request.user.username[0:2].upper(),
+            "userInitial": request.user.username[0].upper(),
         }
         return render(request, 'bookInfo.html', context=context)
 
@@ -87,15 +91,21 @@ def processLogin(request):
 
 def processSignup(request):
     username, password = request.POST.get('username'), request.POST.get('password')
+
     if not username or not password:
-        messages.error(request, 'Please provide all the required fields: username, email, password')
+        messages.error(request, 'Please provide all the required fields: username, password')
         return redirect('signupView')
     try:
-        user = Account.objects.create_user(username=username, password=password)
+        user = Account.objects.create_user(
+            username=username,
+            password=password,
+        )
+        user.userRandomColor = ["#" + ''.join([random.choice('ABCDEF0123456789') for i in range(6)])][0]
+        user.save()
         login(request, user)
         return redirect('dashView')
     except IntegrityError:
-        messages.error(request, 'Username or email must is already registered')
+        messages.error(request, 'Username is already registered')
         return redirect('signupView')
 
 

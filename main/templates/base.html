@@ -29,7 +29,7 @@
                 {% if userImg %}
                 <img class="rounded-circle" src={{userImg.url}} width=50 height=50>
                 {% else %}
-                <div class="userIcon border border-secondary rounded-circle" width=50 height=50>{{userInitial}}
+                <div class="userIcon border border-secondary rounded-circle" style="background-color: {{userRandomColor}}">{{userInitial}}
                 </div>
                 {% endif %}
             </a>
