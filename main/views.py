@@ -81,6 +81,7 @@ def processLogin(request):
         login(request, user)
         return redirect('dashView')
     else:
+        messages.error(request, "Your credentials are invalid please try again")
         return redirect('loginView')
 
 
