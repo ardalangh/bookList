@@ -80,3 +80,8 @@ header {
     color: white;
 }
 
+
+
+.input-group-append .btn-outline {
+    margin-right: 1%;
+}

@@ -3,6 +3,7 @@
 
 {% block content %}
 {% for book in books %}
+
         <div class="card">
             <div style="display: block">
                 <div style="width: 128px; margin: auto;">
@@ -13,8 +14,7 @@
             <div class="card-body">
                 <div>
                     <h5 class="card-title">{{book.name}}</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                        content.</p>
+                    <p class="card-text">{{book.shortDescription}}</p>
                 </div>
 
                 <div>

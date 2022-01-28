@@ -28,7 +28,8 @@ def dashView(request):
                 {
                     "id": bookId,
                     "name": books[bookId]["volumeInfo"]["title"],
-                    "bookImgUrl": books[bookId]["volumeInfo"]["imageLinks"]["thumbnail"]
+                    "bookImgUrl": books[bookId]["volumeInfo"]["imageLinks"]["thumbnail"],
+                    "shortDescription": books[bookId]["volumeInfo"]["description"][0:100] + "...",
                 } for bookId in books.keys()
             ]
         }
@@ -73,8 +74,8 @@ def bookInfoView(request, id):
 
 # PROCESS
 def processLogin(request):
-    email, username, password = request.POST.get('email'), request.POST.get('username'), request.POST.get('password')
-    user = authenticate(email=email, username=username, password=password)
+    username, password = request.POST.get('username'), request.POST.get('password')
+    user = authenticate(username=username, password=password)
 
     if user is not None:
         login(request, user)
@@ -84,12 +85,12 @@ def processLogin(request):
 
 
 def processSignup(request):
-    email, username, password = request.POST.get('email'), request.POST.get('username'), request.POST.get('password')
-    if not email or not username or not password:
+    username, password = request.POST.get('username'), request.POST.get('password')
+    if not username or not password:
         messages.error(request, 'Please provide all the required fields: username, email, password')
         return redirect('signupView')
     try:
-        user = Account.objects.create_user(email=email, username=username, password=password)
+        user = Account.objects.create_user(username=username, password=password)
         login(request, user)
         return redirect('dashView')
     except IntegrityError:

@@ -11,6 +11,8 @@ requests = "*"
 django-static-jquery = "*"
 djangoajax = "*"
 django-bootstrap-static = "*"
+behave-django = "*"
+selenium = "*"
 
 [dev-packages]
 

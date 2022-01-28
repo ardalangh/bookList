@@ -1,13 +1,10 @@
-{% load bootstrap5 %}
-{% load static %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
-
+{% load static%}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/authPages.css' %}">
     <title>Title</title>
 </head>
@@ -23,8 +20,6 @@
         {% endfor %}
     </ul>
     {% endif %}
-
-
 
 
     {% block content %}

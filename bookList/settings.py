@@ -34,7 +34,7 @@ INSTALLED_APPS = [
 
     # imported apps
     'bootstrap',
-    'bootstrap5',
+    'behave_django',
     'django_static_jquery',
 
     'django.contrib.admin',

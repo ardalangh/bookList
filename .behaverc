@@ -1,0 +1,3 @@
+[behave]
+
+paths = main/tests/acceptance
