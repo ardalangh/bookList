@@ -18,3 +18,4 @@ urlpatterns = [
     path('processDeleteFromReadingList/<slug:id>/', processDeleteFromReadingList, name='processDeleteFromReadingList'),
 
 ]
+

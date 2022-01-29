@@ -9,8 +9,8 @@
 <div class="bookInfoCard">
     <div class="bookImageContainer">
         <img
-                src={{volumeInfo.imageLinks.thumbnail}}
-                alt={{volumeInfo.title}} image
+                src={{imageLinks.thumbnail}}
+                alt={{title}} image
         >
     </div>
 
@@ -24,26 +24,31 @@
             Author{{ total|pluralize }}:
         {% endwith %}
 
-        {% for author in volumeInfo.authors %}
+        {% for author in authors %}
             {{author}}&nbsp;&nbsp;
         {% endfor%}
     </div>
 
     <div>
-        Published by {{volumeInfo.publisher}} on {{volumeInfo.publishedDate}}
+        Published by {{publisher}} on {{publishedDate}}
     </div>
 
 
 
     <!--isbn information-->
     <div class="ISBNInfo">
-        {% for isbn in volumeInfo.industryIdentifiers %}
+        {% for isbn in industryIdentifiers %}
             {{isbn.type}} : {{isbn.identifier}} &nbsp;&nbsp;
         {% endfor%}
     </div>
 
     <hr/>
-    <p>{{volumeInfo.description}}</p>
+
+    <!--  Book description is in html tag formats therefore we keey autoexcape    -->
+    {% autoescape off %}
+        {{description}}
+    {% endautoescape %}
+
 
 </div>
 

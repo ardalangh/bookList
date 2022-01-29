@@ -1,4 +1,3 @@
-import json
 import random
 import urllib
 import requests
@@ -22,7 +21,6 @@ def dashView(request):
     if request.user.is_authenticated:
         books = request.user.books
 
-        print(request.user.userRandomColor)
         context = {
             "username": request.user.username,
             "userImg": request.user.user_img,
@@ -30,6 +28,7 @@ def dashView(request):
             "userRandomColor": request.user.userRandomColor,
             "books": [
                 {
+                    "kind": "backendTrimmed",
                     "id": bookId,
                     "name": books[bookId]["volumeInfo"]["title"],
                     "bookImgUrl": books[bookId]["volumeInfo"]["imageLinks"]["thumbnail"],
@@ -37,6 +36,12 @@ def dashView(request):
                 } for bookId in books.keys()
             ]
         }
+
+        if "lastSearchData" in request.session:
+            request.session["lastSearchData"].extend(context["books"])
+        else:
+            request.session["lastSearchData"] = context["books"]
+
 
         return render(request, 'dash.html', context=context)
     else:
@@ -47,7 +52,7 @@ def searchResultView(request):
     bookName = request.GET.get('bookName')
     requestResponse = getResFromGoogle(bookName)
     if request.method == 'GET' and bookName:
-        request.session["lastSearchData"] = requestResponse
+        request.session["lastSearchData"] = getItemsFromGoogleResponse(requestResponse)
         context = {
             **requestResponse,
             "username": request.user.username,
@@ -65,10 +70,16 @@ def searchResultView(request):
 
 
 def bookInfoView(request, id):
-    targetBook = list(filter(lambda b: b["id"] == id, request.session["lastSearchData"]["items"]))
+
+    targetBook = list(filter(lambda b: b["id"] == id, request.session["lastSearchData"]))
+    targetBook = getResFromGoogleById(id)
+
+    print(targetBook["volumeInfo"])
+
+
     if len(targetBook) > 0:
         context = {
-            **targetBook[0],
+            **targetBook["volumeInfo"],
             "username": request.user.username,
             "userImg": request.user.user_img,
             "userInitial": request.user.username[0].upper(),
@@ -90,33 +101,42 @@ def processLogin(request):
 
 
 def processSignup(request):
+    """ processes for the signup end point """
+    # retrieve authentication data from front-end
     username, password = request.POST.get('username'), request.POST.get('password')
-
+    # if username and password is not inputted redirect to the sign up page and display and error message
     if not username or not password:
         messages.error(request, 'Please provide all the required fields: username, password')
         return redirect('signupView')
+    # tries to create a new user with the inputted data
     try:
+        # create a user with the given cred data
         user = Account.objects.create_user(
             username=username,
             password=password,
         )
+        # generate a new random color for the user and save it in the db
         user.userRandomColor = ["#" + ''.join([random.choice('ABCDEF0123456789') for i in range(6)])][0]
         user.save()
+        # login the user so we can access request.user in many HTTP requests and redirect to dash page
         login(request, user)
         return redirect('dashView')
+    # if username exists redirect back to the sign up page and display an error
     except IntegrityError:
         messages.error(request, 'Username is already registered')
         return redirect('signupView')
 
 
 def processLogout(request):
+    """ processes for the logout end point """
+    # log the user out and redirect to the login page
     logout(request)
     return redirect('loginView')
 
 
 def processAddToReadingList(request):
     bookId = request.POST.get('bookId')
-    bookData = list(filter(lambda b: b["id"] == bookId, request.session["lastSearchData"]["items"]))
+    bookData = list(filter(lambda b: b["id"] == bookId, request.session["lastSearchData"]))
 
     if bookId not in request.user.books and len(bookData) > 0:
         request.user.books[bookId] = bookData[0]
@@ -138,9 +158,20 @@ def processDeleteFromReadingList(request, id):
 
 
 # HELPER
+
+def getResFromGoogleById(id):
+    api_key = "AIzaSyDzp_LKa5V2u5vtPu1cMtTKM287r7KW50s"
+    google_host = f"https://www.googleapis.com/books/v1/volumes/{id}?key={api_key}"
+    return requests.get(google_host).json()
+
+
 def getResFromGoogle(bookName):
     api_key = "AIzaSyDzp_LKa5V2u5vtPu1cMtTKM287r7KW50s"
     google_host = "https://www.googleapis.com/books/v1/volumes"
     f = {'q': bookName, 'key': api_key}
     google_host += "?" + urllib.parse.urlencode(f)
     return requests.get(google_host).json()
+
+
+def getItemsFromGoogleResponse(data):
+    return data["items"] if "items" in data else []
