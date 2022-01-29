@@ -31,6 +31,7 @@ def dashView(request):
                     "kind": "backendTrimmed",
                     "id": bookId,
                     "name": books[bookId]["volumeInfo"]["title"],
+                    "safeName": books[bookId]["volumeInfo"]["title"][0:32],
                     "bookImgUrl": books[bookId]["volumeInfo"]["imageLinks"]["thumbnail"],
                     "shortDescription": books[bookId]["volumeInfo"]["description"][0:100] + "...",
                 } for bookId in books.keys()
@@ -51,17 +52,22 @@ def dashView(request):
 def searchResultView(request):
     bookName = request.GET.get('bookName')
     requestResponse = getResFromGoogle(bookName)
+    items = getItemsFromGoogleResponse(requestResponse)
+
+
+    googleRes = [{**book, "safeTitle": f"{book['volumeInfo']['title'][0:32]}."} for book in items]
     if request.method == 'GET' and bookName:
         request.session["lastSearchData"] = getItemsFromGoogleResponse(requestResponse)
         context = {
-            **requestResponse,
+            "items": googleRes,
             "username": request.user.username,
             "userImg": request.user.user_img,
             "userInitial": request.user.username[0].upper(),
         }
     else:
         context = {
-            **request.session["lastSearchData"],
+            # **request.session["lastSearchData"],
+            "items": googleRes,
             "username": request.user.username,
             "userImg": request.user.user_img,
             "userInitial": request.user.username[0:2].upper(),
@@ -73,10 +79,6 @@ def bookInfoView(request, id):
 
     targetBook = list(filter(lambda b: b["id"] == id, request.session["lastSearchData"]))
     targetBook = getResFromGoogleById(id)
-
-    print(targetBook["volumeInfo"])
-
-
     if len(targetBook) > 0:
         context = {
             **targetBook["volumeInfo"],
