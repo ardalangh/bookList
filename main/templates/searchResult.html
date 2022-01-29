@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block content %}
 
@@ -12,7 +12,7 @@
                     {% elif book.volumeInfo.imageLinks.smallThumbnail %}
                         <img src={{book.volumeInfo.imageLinks.smallThumbnail}} class="card-img-top bookImg" alt="...">
                     {% else %}
-                        <img src="#" class="card-img-top bookImg" alt="...">
+                        <img src="{% static 'noImgData.png' %}" class="card-img-top bookImg" alt="...">
                     {% endif %}
                 </div>
             </div>
