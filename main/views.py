@@ -22,10 +22,7 @@ def dashView(request):
         books = request.user.books
 
         context = {
-            "username": request.user.username,
-            "userImg": request.user.user_img,
-            "userInitial": request.user.username[0].upper(),
-            "userRandomColor": request.user.userRandomColor,
+            ** generateUserRelatedContext(request.user),
             "books": [
                 {
                     "kind": "backendTrimmed",
@@ -43,7 +40,6 @@ def dashView(request):
         else:
             request.session["lastSearchData"] = context["books"]
 
-
         return render(request, 'dash.html', context=context)
     else:
         return redirect('loginView')
@@ -54,37 +50,28 @@ def searchResultView(request):
     requestResponse = getResFromGoogle(bookName)
     items = getItemsFromGoogleResponse(requestResponse)
 
-
     googleRes = [{**book, "safeTitle": f"{book['volumeInfo']['title'][0:32]}."} for book in items]
     if request.method == 'GET' and bookName:
         request.session["lastSearchData"] = getItemsFromGoogleResponse(requestResponse)
         context = {
             "items": googleRes,
-            "username": request.user.username,
-            "userImg": request.user.user_img,
-            "userInitial": request.user.username[0].upper(),
+            ** generateUserRelatedContext(request.user)
         }
     else:
         context = {
-            # **request.session["lastSearchData"],
             "items": googleRes,
-            "username": request.user.username,
-            "userImg": request.user.user_img,
-            "userInitial": request.user.username[0:2].upper(),
+            **generateUserRelatedContext(request.user)
         }
     return render(request, "searchResult.html", context=context)
 
 
 def bookInfoView(request, id):
-
     targetBook = list(filter(lambda b: b["id"] == id, request.session["lastSearchData"]))
     targetBook = getResFromGoogleById(id)
     if len(targetBook) > 0:
         context = {
             **targetBook["volumeInfo"],
-            "username": request.user.username,
-            "userImg": request.user.user_img,
-            "userInitial": request.user.username[0].upper(),
+            ** generateUserRelatedContext(request.user)
         }
         return render(request, 'bookInfo.html', context=context)
 
@@ -159,16 +146,12 @@ def processDeleteFromReadingList(request, id):
     return redirect('dashView')
 
 
-
-
 def processUserImgUpload(request):
     if request.method == 'POST':
         uploadedImage = request.FILES.get("data")
         request.user.user_img = uploadedImage
         request.user.save()
         return redirect('dashView')
-
-
 
 
 # HELPER
@@ -185,6 +168,15 @@ def getResFromGoogle(bookName):
     f = {'q': bookName, 'key': api_key}
     google_host += "?" + urllib.parse.urlencode(f)
     return requests.get(google_host).json()
+
+
+def generateUserRelatedContext(user):
+    return {
+        "username": user.username,
+        "userImg": user.user_img,
+        "userInitial": user.username[0].upper(),
+        "userRandomColor": user.userRandomColor,
+    }
 
 
 def getItemsFromGoogleResponse(data):
