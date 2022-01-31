@@ -133,8 +133,9 @@ def processAddToReadingList(request):
 
 
 def processDeleteFromReadingList(request, id):
-    if id in request.user.books:
-        del request.user.books[id]
+    bookToBeRemoved = request.user.books.filter(id=id)
+    if len(request.user.books.filter(id=id)) > 0 :
+        request.user.books.remove(bookToBeRemoved[0])
         request.user.save()
     else:
         messages.error(request, f"book if {id} is not in your reading list")
