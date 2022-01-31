@@ -3,6 +3,7 @@ import urllib
 import requests
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from main.models import Account
@@ -17,34 +18,32 @@ def signupView(request):
     return render(request, 'signup.html')
 
 
+@login_required
 def dashView(request):
-    if request.user.is_authenticated:
-        books = request.user.books
+    books = request.user.books
+    context = {
+        **generateUserRelatedContext(request.user),
+        "books": [
+            {
+                "kind": "backendTrimmed",
+                "id": bookId,
+                "name": books[bookId]["volumeInfo"]["title"],
+                "safeName": books[bookId]["volumeInfo"]["title"][0:32],
+                "bookImgUrl": books[bookId]["volumeInfo"]["imageLinks"]["thumbnail"],
+                "shortDescription": books[bookId]["volumeInfo"]["description"][0:100] + "...",
+            } for bookId in books.keys()
+        ]
+    }
 
-        context = {
-            **generateUserRelatedContext(request.user),
-            "books": [
-                {
-                    "kind": "backendTrimmed",
-                    "id": bookId,
-                    "name": books[bookId]["volumeInfo"]["title"],
-                    "safeName": books[bookId]["volumeInfo"]["title"][0:32],
-                    "bookImgUrl": books[bookId]["volumeInfo"]["imageLinks"]["thumbnail"],
-                    "shortDescription": books[bookId]["volumeInfo"]["description"][0:100] + "...",
-                } for bookId in books.keys()
-            ]
-        }
-
-        if "lastSearchData" in request.session:
-            request.session["lastSearchData"].extend(context["books"])
-        else:
-            request.session["lastSearchData"] = context["books"]
-
-        return render(request, 'dash.html', context=context)
+    if "lastSearchData" in request.session:
+        request.session["lastSearchData"].extend(context["books"])
     else:
-        return redirect('loginView')
+        request.session["lastSearchData"] = context["books"]
+
+    return render(request, 'dash.html', context=context)
 
 
+@login_required
 def searchResultView(request):
     bookName = request.GET.get('bookName')
     requestResponse = getResFromGoogle(bookName)
@@ -65,6 +64,7 @@ def searchResultView(request):
     return render(request, "searchResult.html", context=context)
 
 
+@login_required
 def bookInfoView(request, id):
     targetBook = list(filter(lambda b: b["id"] == id, request.session["lastSearchData"]))
     targetBook = getResFromGoogleById(id)
