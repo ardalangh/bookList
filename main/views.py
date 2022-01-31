@@ -66,7 +66,6 @@ def searchResultView(request):
 
 @login_required
 def bookInfoView(request, id):
-    targetBook = list(filter(lambda b: b["id"] == id, request.session["lastSearchData"]))
     targetBook = getResFromGoogleById(id)
     if len(targetBook) > 0:
         context = {
@@ -125,10 +124,9 @@ def processLogout(request):
 
 def processAddToReadingList(request):
     bookId = request.POST.get('bookId')
-    bookData = list(filter(lambda b: b["id"] == bookId, request.session["lastSearchData"]))
-
-    if bookId not in request.user.books and len(bookData) > 0:
-        request.user.books[bookId] = bookData[0]
+    bookData = getResFromGoogleById(bookId)
+    if bookId not in request.user.books and "volumeInfo" in bookData:
+        request.user.books[bookId] = bookData
         request.user.save()
         return redirect('dashView')
     else:
