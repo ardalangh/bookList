@@ -159,6 +159,18 @@ def processDeleteFromReadingList(request, id):
     return redirect('dashView')
 
 
+
+
+def processUserImgUpload(request):
+    if request.method == 'POST':
+        uploadedImage = request.FILES.get("data")
+        request.user.user_img = uploadedImage
+        request.user.save()
+        return redirect('dashView')
+
+
+
+
 # HELPER
 
 def getResFromGoogleById(id):

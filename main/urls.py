@@ -1,6 +1,6 @@
 from django.urls import path
 from main.views import loginView, signupView, processLogin, processSignup, dashView, processLogout, \
-    searchResultView, bookInfoView, processAddToReadingList, processDeleteFromReadingList
+    searchResultView, bookInfoView, processAddToReadingList, processDeleteFromReadingList, processUserImgUpload
 
 urlpatterns = [
     path('', loginView, name='loginView'),
@@ -12,6 +12,7 @@ urlpatterns = [
     path('processLogin/', processLogin, name='processLogin'),
     path('processSignup/', processSignup, name='processSignup'),
     path('processLogout/', processLogout, name='processLogout'),
+    path('processUserImgUpload/', processUserImgUpload, name='processUserImgUpload'),
 
 
     path('processAddToReadingList/', processAddToReadingList, name='processAddToReadingList'),
