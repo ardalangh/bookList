@@ -1,4 +1,5 @@
 import random
+import re
 import urllib
 import requests
 from django.contrib.auth import authenticate, login, logout
@@ -11,35 +12,31 @@ from main.models import Account
 
 # VIEWS
 def loginView(request):
+    """returns : render of the endpoint "/" for login form"""
     return render(request, 'login.html')
 
 
 def signupView(request):
+    """returns : render of the endpoint "/signup" for signup form"""
     return render(request, 'signup.html')
 
 
 @login_required
 def dashView(request):
+    """
+        returns : render of the endpoint "/dash" for dashboard which includes user's reading list, the form for changing
+                user image (embedded in the header), logout button, home button, search form for sending query's to the
+                google api.
+        context must include:  all the user books that is already in the user's reading list and user basic info which will
+                            get added using "generateUserRelatedContext"
+
+    """
     books = request.user.books
+
     context = {
         **generateUserRelatedContext(request.user),
-        "books": [
-            {
-                "kind": "backendTrimmed",
-                "id": bookId,
-                "name": books[bookId]["volumeInfo"]["title"],
-                "safeName": books[bookId]["volumeInfo"]["title"][0:32],
-                "bookImgUrl": books[bookId]["volumeInfo"]["imageLinks"]["thumbnail"],
-                "shortDescription": books[bookId]["volumeInfo"]["description"][0:100] + "...",
-            } for bookId in books.keys()
-        ]
+        "books": generateUserBooksContext(request.user)
     }
-
-    if "lastSearchData" in request.session:
-        request.session["lastSearchData"].extend(context["books"])
-    else:
-        request.session["lastSearchData"] = context["books"]
-
     return render(request, 'dash.html', context=context)
 
 
@@ -124,9 +121,9 @@ def processLogout(request):
 
 def processAddToReadingList(request):
     bookId = request.POST.get('bookId')
-    bookData = getResFromGoogleById(bookId)
-    if bookId not in request.user.books and "volumeInfo" in bookData:
-        request.user.books[bookId] = bookData
+    # bookData = getResFromGoogleById(bookId)
+    if bookId not in request.user.books:
+        request.user.books[bookId] = bookId
         request.user.save()
         return redirect('dashView')
     else:
@@ -179,6 +176,28 @@ def generateUserRelatedContext(user) -> dict:
         "userInitial": user.username[0].upper(),
         "userRandomColor": user.userRandomColor,
     }
+
+
+def generateUserBooksContext(user) -> list:
+    def helper(book, i):
+        book = getResFromGoogleById(i)
+        bookJson = {
+            "kind": "backendTrimmed",
+            "id": i,
+            "name": book["volumeInfo"]["title"],
+            "safeName": book["volumeInfo"]["title"][0:32],
+            "bookImgUrl": book["volumeInfo"]["imageLinks"]["thumbnail"],
+        }
+
+        def cleanHtml(raw_html):
+            CLEANER = re.compile('<.*?>')
+            return re.sub(CLEANER, '', raw_html)
+
+        if "description" in book["volumeInfo"]:
+            bookJson["shortDescription"] = cleanHtml(book["volumeInfo"]["description"])[0:100] + "..."
+        return bookJson
+
+    return [helper(user.books[bookId], bookId) for bookId in user.books.keys()]
 
 
 def getItemsFromGoogleResponse(data):
