@@ -159,7 +159,6 @@ def processUserImgUpload(request):
 
 def getResFromGoogleById(id):
     api_key = os.environ.get('API_KEY')
-    print(api_key)
     google_host = f"https://www.googleapis.com/books/v1/volumes/{id}?key={api_key}"
     return requests.get(google_host).json()
 

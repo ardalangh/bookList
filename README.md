@@ -20,6 +20,17 @@ Google Books Api is used for querying book searches.
 <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Google_Play_Books_icon_%282016%29.svg" width="50px" >
 </p>
 
+
+**Requests: HTTP for Humans™**
+<p align="center">
+<img src="https://docs.python-requests.org/en/latest/_static/requests-sidebar.png
+" width="50px" >
+</p>
+
+
+**python-dotenv 0.19.2** is used to load the api key from the env variables 
+
+
 --- 
 
 **Getting Started:**
