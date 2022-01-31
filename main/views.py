@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
-from main.models import Account
+from main.models import Account, Book
 
 
 # VIEWS
@@ -28,14 +28,14 @@ def dashView(request):
                 user image (embedded in the header), logout button, home button, search form for sending query's to the
                 google api.
         context must include:  all the user books that is already in the user's reading list and user basic info which will
-                            get added using "generateUserRelatedContext"
+                            geted using "generateUserRelatedContext"
 
     """
     books = request.user.books
 
     context = {
         **generateUserRelatedContext(request.user),
-        "books": generateUserBooksContext(request.user)
+        "books": generateUserBooksContext(request.user.books)
     }
     return render(request, 'dash.html', context=context)
 
@@ -45,17 +45,14 @@ def searchResultView(request):
     bookName = request.GET.get('bookName')
     requestResponse = getResFromGoogle(bookName)
     items = getItemsFromGoogleResponse(requestResponse)
-
-    googleRes = [{**book, "safeTitle": f"{book['volumeInfo']['title'][0:32]}."} for book in items]
     if request.method == 'GET' and bookName:
-        request.session["lastSearchData"] = getItemsFromGoogleResponse(requestResponse)
         context = {
-            "items": googleRes,
+            "items": generateBookContextFromApiRes(items),
             **generateUserRelatedContext(request.user)
         }
     else:
         context = {
-            "items": googleRes,
+            "items": generateUserBooksContext(items),
             **generateUserRelatedContext(request.user)
         }
     return render(request, "searchResult.html", context=context)
@@ -121,9 +118,13 @@ def processLogout(request):
 
 def processAddToReadingList(request):
     bookId = request.POST.get('bookId')
-    # bookData = getResFromGoogleById(bookId)
-    if bookId not in request.user.books:
-        request.user.books[bookId] = bookId
+    if len(request.user.books.filter(id=bookId)) == 0:
+        if len(Book.objects.filter(id=bookId)) == 0:
+            b = Book(id=bookId)
+            b.save()
+        else:
+            b = Book.objects.get(id=bookId)
+        request.user.books.add(b)
         request.user.save()
         return redirect('dashView')
     else:
@@ -178,26 +179,54 @@ def generateUserRelatedContext(user) -> dict:
     }
 
 
-def generateUserBooksContext(user) -> list:
-    def helper(i):
-        book = getResFromGoogleById(i)
+
+
+
+
+
+
+def generateBookContextFromApiRes(jsonData):
+    def helper(b):
         bookJson = {
             "kind": "backendTrimmed",
-            "id": i,
-            "name": book["volumeInfo"]["title"],
-            "safeName": book["volumeInfo"]["title"][0:32],
-            "bookImgUrl": book["volumeInfo"]["imageLinks"]["thumbnail"],
+            "id": b["id"],
+            "name": b["volumeInfo"]["title"],
+            "safeName": b["volumeInfo"]["title"][0:32] + "...",
         }
 
-        def cleanHtml(raw_html):
-            CLEANER = re.compile('<.*?>')
-            return re.sub(CLEANER, '', raw_html)
+        if "imageLinks" in b["volumeInfo"]:
+            bookJson["bookImgUrl"] = b["volumeInfo"]["imageLinks"]
 
-        if "description" in book["volumeInfo"]:
-            bookJson["shortDescription"] = cleanHtml(book["volumeInfo"]["description"])[0:100] + "..."
+        if "description" in b["volumeInfo"]:
+            bookJson["shortDescription"] = cleanHtml(b["volumeInfo"]["description"])[0:80] + "..."
         return bookJson
 
-    return [helper(bookId) for bookId in user.books.keys()]
+    def cleanHtml(raw_html):
+        CLEANER = re.compile('<.*?>')
+        return re.sub(CLEANER, '', raw_html)
+
+    return [helper(book) for book in jsonData]
+
+
+def generateUserBooksContext(books) -> list:
+    def cleanHtml(raw_html):
+        CLEANER = re.compile('<.*?>')
+        return re.sub(CLEANER, '', raw_html)
+
+    def helper(book):
+        bookData = getResFromGoogleById(book.id)
+        bookJson = {
+            "kind": "backendTrimmed",
+            "id": book.id,
+            "name": bookData["volumeInfo"]["title"],
+            "safeName": bookData["volumeInfo"]["title"][0:32],
+            "bookImgUrl": bookData["volumeInfo"]["imageLinks"]["thumbnail"],
+        }
+        if "description" in bookData["volumeInfo"]:
+            bookJson["shortDescription"] = cleanHtml(bookData["volumeInfo"]["description"])[0:100] + "..."
+        return bookJson
+
+    return [helper(bookId) for bookId in books.all()]
 
 
 def getItemsFromGoogleResponse(data):

@@ -27,6 +27,10 @@ class AccountManager(BaseUserManager):
         return user
 
 
+class Book(models.Model):
+    id = models.CharField(max_length=32, primary_key=True)
+
+
 class Account(AbstractBaseUser):
     username = models.CharField(max_length=30, unique=True)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
@@ -37,7 +41,7 @@ class Account(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
 
     user_img = models.ImageField(blank=True, upload_to='uploads')
-    books = models.JSONField(default=dict)
+    books = models.ManyToManyField(Book)
     userRandomColor = models.CharField(max_length=7, validators=[MinLengthValidator(7)], default="#ffffff")
 
     USERNAME_FIELD = 'username'

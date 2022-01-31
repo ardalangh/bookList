@@ -4,13 +4,14 @@
 {% block content %}
 
     {% for book in items %}
+
         <div class="card">
             <div style="display: block">
                 <div style="width: 128px; margin: auto;">
-                    {% if book.volumeInfo.imageLinks.thumbnail %}
-                        <img src={{book.volumeInfo.imageLinks.thumbnail}} class="card-img-top bookImg" alt="...">
-                    {% elif book.volumeInfo.imageLinks.smallThumbnail %}
-                        <img src={{book.volumeInfo.imageLinks.smallThumbnail}} class="card-img-top bookImg" alt="...">
+                    {% if book.bookImgUrl.thumbnail %}
+                        <img src={{book.bookImgUrl.thumbnail}} class="card-img-top bookImg" alt="...">
+                    {% elif book.bookImgUrl.smallThumbnail %}
+                        <img src={{book.bookImgUrl.smallThumbnail}} class="card-img-top bookImg" alt="...">
                     {% else %}
                         <img src="{% static 'noImgData.png' %}" class="card-img-top bookImg" alt="...">
                     {% endif %}
@@ -19,9 +20,8 @@
 
             <div class="card-body">
                 <div>
-                    <h5 class="card-title">{{book.safeTitle}}</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                        content.</p>
+                    <h6 class="card-title">{{book.safeName}}</h6>
+                    <p class="card-text">{{book.shortDescription}}</p>
                 </div>
 
                 <div>
