@@ -22,7 +22,7 @@ def dashView(request):
         books = request.user.books
 
         context = {
-            ** generateUserRelatedContext(request.user),
+            **generateUserRelatedContext(request.user),
             "books": [
                 {
                     "kind": "backendTrimmed",
@@ -55,7 +55,7 @@ def searchResultView(request):
         request.session["lastSearchData"] = getItemsFromGoogleResponse(requestResponse)
         context = {
             "items": googleRes,
-            ** generateUserRelatedContext(request.user)
+            **generateUserRelatedContext(request.user)
         }
     else:
         context = {
@@ -71,7 +71,7 @@ def bookInfoView(request, id):
     if len(targetBook) > 0:
         context = {
             **targetBook["volumeInfo"],
-            ** generateUserRelatedContext(request.user)
+            **generateUserRelatedContext(request.user)
         }
         return render(request, 'bookInfo.html', context=context)
 
@@ -170,7 +170,11 @@ def getResFromGoogle(bookName):
     return requests.get(google_host).json()
 
 
-def generateUserRelatedContext(user):
+def generateUserRelatedContext(user) -> dict:
+    """
+    <django.utils.functional.SimpleLazyObject>    user : the authenticated instance of request.user
+    <dict> Returns: a dictionary with all the user related context that needs to be send back to frontend
+    """
     return {
         "username": user.username,
         "userImg": user.user_img,
