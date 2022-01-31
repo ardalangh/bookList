@@ -13,6 +13,7 @@ djangoajax = "*"
 django-bootstrap-static = "*"
 behave-django = "*"
 selenium = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

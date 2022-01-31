@@ -8,6 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from main.models import Account, Book
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 # VIEWS
@@ -154,13 +158,14 @@ def processUserImgUpload(request):
 # HELPER
 
 def getResFromGoogleById(id):
-    api_key = "AIzaSyDzp_LKa5V2u5vtPu1cMtTKM287r7KW50s"
+    api_key = os.environ.get('API_KEY')
+    print(api_key)
     google_host = f"https://www.googleapis.com/books/v1/volumes/{id}?key={api_key}"
     return requests.get(google_host).json()
 
 
 def getResFromGoogle(bookName):
-    api_key = "AIzaSyDzp_LKa5V2u5vtPu1cMtTKM287r7KW50s"
+    api_key = os.environ.get('API_KEY')
     google_host = "https://www.googleapis.com/books/v1/volumes"
     f = {'q': bookName, 'key': api_key}
     google_host += "?" + urllib.parse.urlencode(f)
