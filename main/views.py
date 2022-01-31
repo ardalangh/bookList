@@ -179,7 +179,7 @@ def generateUserRelatedContext(user) -> dict:
 
 
 def generateUserBooksContext(user) -> list:
-    def helper(book, i):
+    def helper(i):
         book = getResFromGoogleById(i)
         bookJson = {
             "kind": "backendTrimmed",
@@ -197,7 +197,7 @@ def generateUserBooksContext(user) -> list:
             bookJson["shortDescription"] = cleanHtml(book["volumeInfo"]["description"])[0:100] + "..."
         return bookJson
 
-    return [helper(user.books[bookId], bookId) for bookId in user.books.keys()]
+    return [helper(bookId) for bookId in user.books.keys()]
 
 
 def getItemsFromGoogleResponse(data):
