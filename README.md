@@ -21,7 +21,7 @@ Google Books Api is used for querying book searches.
 </p>
 
 
-**Requests: HTTP for Humans™**
+**Requests: HTTP for Humans™ 2.26.0**
 <p align="center">
 <img src="https://docs.python-requests.org/en/latest/_static/requests-sidebar.png" width="50px" >
 </p>
