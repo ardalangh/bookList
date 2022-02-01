@@ -15,6 +15,7 @@ behave-django = "*"
 selenium = "*"
 python-dotenv = "*"
 gunicorn = "*"
+django-heroku = "*"
 
 [dev-packages]
 
