@@ -1,6 +1,8 @@
 ### Reading List 
 #### A reading list application powered using google books API.
 
+**Live Demo:** 
+https://googleapireadinglist.herokuapp.com/
 ---
 
 **Technologies Used:**
@@ -35,6 +37,7 @@ Google Books Api is used for querying book searches.
 **Getting Started:**
 
 ```shell
+    # AFTER ADDING YOUR GOOGLE API KEY TO THE ENV VARIABLE   
     # install pipenv if you haven't already    
     pip install pipenv 
     # activate the env     
