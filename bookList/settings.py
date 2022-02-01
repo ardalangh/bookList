@@ -22,8 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-m*a!v20klqk&198u*7ei6tgp#h778ns20*^_@n$wrt=j50p^7p'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# SECURITY WA
+# RNING: don't run with debug turned on in production!
+DEBUG = 'False'
 
 ALLOWED_HOSTS = []
 
@@ -126,10 +127,11 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+django_heroku.settings(locals())
 
 LOGIN_URL = "/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-django_heroku.settings(locals())
+
