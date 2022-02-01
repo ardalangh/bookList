@@ -42,3 +42,16 @@ Google Books Api is used for querying book searches.
     # run the server
     python manage.py runserver     
 ```
+
+---
+**Features:**
+
+1. User can search for any books available on Google's database and add it to their reading list.
+![title](readmeAssets/dash.png)
+2. User can get more information on individual books. 
+![title](readmeAssets/detail.png)
+3. User can change their image
+![title](readmeAssets/changeImg.png)
+
+
+
