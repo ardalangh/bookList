@@ -7,19 +7,23 @@ https://googleapireadinglist.herokuapp.com/
 
 **Technologies Used:**
 
-Django Framework is being used Topower the backend
-
-Django's Template system is used to generate HTML dynamically. 
+**Django** The framework is being used to power the backend along with its template system is used to generate HTML dynamically. 
 
 <p align="center">
 <img src="https://static.djangoproject.com/img/logos/django-logo-negative.svg" width="100px" >
+</p>
+
+**Bootstrap v5.0:**
+
+<p align="center">
+<img src="https://cdn.worldvectorlogo.com/logos/bootstrap-5-1.svg" width="40px" >
 </p>
 
 
 **API Used:**
 Google Books Api is used for querying book searches. 
 <p align="center">
-<img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Google_Play_Books_icon_%282016%29.svg" width="50px" >
+<img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Google_Play_Books_icon_%282016%29.svg" width="40px" >
 </p>
 
 
